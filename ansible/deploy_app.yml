@@ -1,0 +1,22 @@
+- hosts: ec2-k8s-m1
+  become: yes
+  tasks:
+  - name: "Upload k8s-deploy"
+    copy:
+      src: "k8s_deploy"
+      dest: "/root/"
+        
+  - name: "Aplicar configmap"
+    shell: "kubectl apply -f /root/k8s_deploy/mysql-configmap.yml"
+
+  - name: "Aplicar secret"
+    shell: "kubectl apply -f /root/k8s_deploy/mysql-secret.yml"
+
+  - name: "Aplicar deployment"
+    shell: "kubectl apply -f /root/k8s_deploy/deployment.yml"
+
+  - name: "Aplicar nodeport"
+    shell: "kubectl apply -f /root/k8s_deploy/nodeport-javadb.yml"
+
+  - name: "Aplicar lb"
+    shell: "kubectl apply -f /root/k8s_deploy/loadb.yml"

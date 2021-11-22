@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Verify K8S') {
+            steps {
+                sh "scripts/k8s_verify.sh"
+            }
+        }
+        stage('Build AMI') {
+            steps {
+                sh "scripts/ami_gen.sh"
+            }
+        }
+    }
+}

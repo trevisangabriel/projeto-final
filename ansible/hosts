@@ -1,0 +1,24 @@
+[ec2-k8s-proxy]
+18.230.123.14 ansible_ssh_private_key_file=/home/ubuntu/.ssh/key_geral
+
+[ec2-k8s-m1]
+18.228.226.210 ansible_ssh_private_key_file=/home/ubuntu/.ssh/key_geral
+[ec2-k8s-m2]
+18.229.132.59 ansible_ssh_private_key_file=/home/ubuntu/.ssh/key_geral
+[ec2-k8s-m3]
+52.67.216.31 ansible_ssh_private_key_file=/home/ubuntu/.ssh/key_geral
+
+[ec2-k8s-w1]
+52.67.47.142 ansible_ssh_private_key_file=/home/ubuntu/.ssh/key_geral
+[ec2-k8s-w2]
+18.230.58.11 ansible_ssh_private_key_file=/home/ubuntu/.ssh/key_geral
+[ec2-k8s-w3]
+54.94.228.32 ansible_ssh_private_key_file=/home/ubuntu/.ssh/key_geral
+
+[ec2-mysql]
+192.168.1.142 ansible_ssh_private_key_file=/home/ubuntu/.ssh/key_geral
+[ec2-mysql:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -W %h:%p -q k8sdev"'
+
+[ec2-jenkins]
+54.94.87.119 ansible_ssh_private_key_file=/home/ubuntu/.ssh/key_geral

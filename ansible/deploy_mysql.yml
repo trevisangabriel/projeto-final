@@ -1,0 +1,66 @@
+- hosts: ec2-mysql
+
+  tasks:
+    - name: "sudo apt-get update"
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400
+
+    - name: "Instala pacotes em lote"
+      apt:
+        name: "{{ item }}"
+        state: latest
+      become: yes
+      with_items:
+        - mysql-server
+        - python3-pycurl
+        - python3-mysqldb
+
+    - name: "Levanta serviço do mysql"
+      become: yes
+      service:
+        name: mysql
+        state: started
+
+    # - name: "Criando senha root mysql"
+    #   become: yes
+    #   mysql_user:
+    #     name: root
+    #     host: localhost
+    #     password: root
+    #     priv: "*.*:ALL,GRANT"
+
+    # - name: "Criando senha root mysql"
+    #   become: yes
+    #   mysql_user:
+    #     login_user: root
+    #     login_password: root
+    #     name: root
+    #     host: "%"
+    #     password: root
+    #     priv: "*.*:ALL,GRANT"
+  
+    - name: "Cria o banco de dados MySQL"
+      mysql_db:
+        name: SpringWebYoutubeTest
+        login_user: root
+        login_password: root
+        state: present
+
+    - name: Copy cnf file
+      become: yes
+      copy:
+        src: /home/ubuntu/aws-jenkins-tf-ans-k8s/ansible/mysql/mysqld.cnf
+        dest: /etc/mysql/mysql.conf.d
+
+    - name: Copy database dump file
+      become: yes
+      copy:
+        src: /home/ubuntu/aws-jenkins-tf-ans-k8s/ansible/mysql/dump-mysql.sql
+        dest: /tmp
+
+    - name: Restore dump
+      become: yes
+      shell: mysql -uroot -proot SpringWebYoutubeTest < /tmp/dump-mysql.sql

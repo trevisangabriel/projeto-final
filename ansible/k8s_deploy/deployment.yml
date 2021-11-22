@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-deployment
+spec:
+  template:
+    metadata:
+      name: pod-javadb
+      labels:
+        app: pod-javadb
+    spec:
+      containers:
+        - name: container-pod-javadb
+          image: fzerati/crud-java-login:0.1
+          env:
+            - name: USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: USER
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: PASSWORD
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: DATABASE_URL
+          ports:
+            - containerPort: 8080
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-javadb
